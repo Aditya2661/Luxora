@@ -6,6 +6,7 @@ import cartimg from "../images/shopping-cart.png"
 import Goback from "../images/go-back.png"
 import { useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
+
 const NavBar = ({isLoggedin , setLogin }) => {
     const navigate=useNavigate();
     
@@ -39,13 +40,13 @@ const NavBar = ({isLoggedin , setLogin }) => {
                         toast.success("Logged Out");
                      }
                     }
-                     className='bg-black font-bold rounded-full text-white text-xl px-4 mb-1 py-2 border-rounded'>Logout</button>
+                     className='bg-black font-bold rounded-full text-white text-l px-4 mb-5 py-1 border-rounded'>Logout</button>
                  
                 }
                 {
                     isLoggedin &&
                     <Link to="/Dashboard" >
-                    <button><img src={user} className='w-12'></img></button>
+                    <button><img src={user} className='w-8'></img></button>
                     
                     </Link>
                 }
@@ -53,7 +54,7 @@ const NavBar = ({isLoggedin , setLogin }) => {
                     isLoggedin &&
                     <Link to="/Cart">
                     <button>
-                        <img src={cartimg} className='w-12'></img>
+                        <img src={cartimg} className='w-8'></img>
                     </button>
                     </Link>
                 }
@@ -65,7 +66,7 @@ const NavBar = ({isLoggedin , setLogin }) => {
                         }
                     }>
                     <button >
-                        <img alt="Go back" src={Goback} className='w-12'></img>
+                        <img alt="Go back" src={Goback} className='w-8'></img>
                     </button>
                     </Link>
                 }

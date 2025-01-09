@@ -81,17 +81,17 @@ async function getProductDataAmazon(link) {
         const productElements = await page.$$('[role="listitem"]');
 
         // Loop through the first 7 product elements
-        for (let i = 0; i < Math.min(7, productElements.length); i++) {
+        for (let i = 0; i < Math.min(15, productElements.length); i++) {
             const product = productElements[i];
 
             // Extract product details
             const image = await product.$eval('img', img => img.src).catch(() => null);
             const name =  await product.$eval('h2 span', span => span.innerText).catch(() => null);
-            const description = await product.$eval('a h2 span', span => span.innerText).catch(() => null);
+            // const description = await product.$eval('a h2 span', span => span.innerText).catch(() => null);
             const price = await product.$eval('.a-price-whole', span => span.innerText).catch(() => null);
 
             // Push the product data to the array
-            data.push({ image, name, description, price });
+            data.push({ image, name, price });
         }
 
         return data; // Return the scraped data
@@ -103,6 +103,92 @@ async function getProductDataAmazon(link) {
     }
 }
 
+//Scraping flipkart
+async function getProductDataFlipkart(link) {
+    let browser;
+    try {
+        browser = await puppeteer.launch({ headless: true });
+        const page = await browser.newPage();
+
+        await page.setViewport({ width: 1080, height: 760 });
+        await page.setDefaultNavigationTimeout(30000); // 30 seconds
+
+        // Navigate to the Flipkart search results page
+        await page.goto(link, { waitUntil: 'domcontentloaded' });
+
+        // Wait for product elements to load
+        // await page.waitForSelector('._75nlfW');
+
+        // Array to store the product data
+        const data = [];
+
+        // Select all product containers
+        const productElements = await page.$$('._75nlfW');
+
+        // Loop through the first 7 product elements
+        for (let i = 0; i < Math.min(9, productElements.length); i++) {
+            const product = productElements[i];
+
+            // Extract product details
+            const image = await product.$eval('img', img => img.src).catch(() => null);
+            const name = await product.$eval('.WKTcLC', el => el.innerText).catch(() => null);
+            const price = await product.$eval('.Nx9bqj', el => el.innerText).catch(() => null);
+
+            // Push the product data to the array
+            data.push({ image, name, price });
+        }
+
+        return data; // Return the scraped data
+    } catch (err) {
+        console.error('Error scraping Flipkart:', err);
+        return [];
+    } finally {
+        if (browser) await browser.close(); // Ensure browser closes
+    }
+}
+
+
+
+//Scraping Myntra
+async function getProductDataMeesho(link) {
+    let browser;
+    try {
+        browser = await puppeteer.launch({ headless: true });
+        const page = await browser.newPage();
+
+        await page.setViewport({ width: 1080, height: 760 });
+        await page.setDefaultNavigationTimeout(30000); // 30 seconds
+
+        // Navigate to the Meesho search results page
+        await page.goto(link, { waitUntil: 'domcontentloaded' });
+
+        // Array to store the product data
+        const data = [];
+
+        // Locate all product elements (refine the selector based on Meesho's DOM structure)
+        const productElements = await page.$$('.VirtualizedListstyled__VirtualItemsContainer-sc-b039ul-1');
+
+        // Loop through the first 7 product elements
+        for (let i = 0; i < Math.min(7, productElements.length); i++) {
+            const product = productElements[i];
+
+            // Extract product details
+            const image = await product.$eval('img', img => img.src).catch(() => null);
+            const name = await product.$eval('.sc-eDvSVe', el => el.innerText).catch(() => null);
+            const price = await product.$eval('h5', el => el.innerText).catch(() => null);
+
+            // Push the product data to the array
+            data.push({ image, name, price });
+        }
+
+        return data; // Return the scraped data
+    } catch (err) {
+        console.error('Error scraping Meesho:', err);
+        return [];
+    } finally {
+        if (browser) await browser.close(); // Ensure browser closes
+    }
+}
 
 app.post('/Home', async (req, res) => {
     const input = req.body.searchedItem;
@@ -113,21 +199,22 @@ app.post('/Home', async (req, res) => {
 
     const amazonURL = encodeURI(`https://www.amazon.in/s?k=${input}`);
     const flipkartURL = encodeURI(`https://www.flipkart.com/search?q=${input}`);
-    const myntraURL = encodeURI(`https://www.myntra.com/${input}`);
+    const meeshoURL = encodeURI(`https://www.meesho.com/search?q=${input}`);
 
     try {
         const AmazonproductData = await getProductDataAmazon(amazonURL); // Await the scraped data
         const FlipkartproductData = await getProductDataFlipkart(flipkartURL); // Await the scraped data
-        const MyntraproductData = await getProductDataMyntra(myntraURL); // Await the scraped data
+        // const MeeshoproductData = await getProductDataMeesho(meeshoURL); // Await the scraped data
 
         // Combine the data from all sources
         const productData = [
-            { name: 'Amazon', products: AmazonproductData },
-            { name: 'Flipkart', products: FlipkartproductData },
-            { name: 'Myntra', products: MyntraproductData },
+            { name: 'Amazon', items: AmazonproductData },
+            { name: 'Flipkart', items: FlipkartproductData },
+        //     { name: 'Myntra', products: MyntraproductData },
         ];
 
         console.log(productData);
+
         // Send the data back as JSON
         res.status(200).json({ products: productData });
     } catch (err) {

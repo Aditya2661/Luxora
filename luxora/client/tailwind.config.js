@@ -4,8 +4,7 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        inter: ["Inter", "sans-serif"],
-        merriweather: ["Merriweather Sans", "serif"],
+        poppins: ['Poppins', 'sans-serif'],
       },
       colors: {
         richblack: {

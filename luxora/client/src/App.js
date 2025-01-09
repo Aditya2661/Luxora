@@ -6,10 +6,13 @@ import Dashboard from './Pages/Dashboard'
 import Cart from './Pages/Cart'
 import Signup from './Pages/Signup'
 import Login from './Pages/Login'
+import Display from './Pages/Display'
+import ProductsGrid from './components/ProductsGrid'
 import { Route , Routes } from 'react-router-dom'
 import PageNotFound from './Pages/PageNotFound'
 import { useState ,useEffect } from 'react'
-import './index.css';  
+import './index.css';
+  
 
 export default function App() {
 
@@ -25,7 +28,9 @@ export default function App() {
         <Route path='/Dashboard' element={<Dashboard/>}/>
         <Route path='/Cart' element={<Cart/>}/>
         <Route path='/Login' element={<Login setLogin={setLogin} isLoggedin={isLoggedin}/>}/>
-        <Route path='/Signup' element={<Signup setLogin={setLogin} isLoggedin={isLoggedin}/>}/> 
+        <Route path='/Signup' element={<Signup setLogin={setLogin} isLoggedin={isLoggedin}/>}/>
+        <Route path="/Display" element={<Display/>}/>
+        <Route path="/ProductsGrid" element={<ProductsGrid/>}/>
         <Route  element={<PageNotFound/>}/>
       </Routes>
 
