@@ -37,6 +37,7 @@ app.post('/Signup', async (req, res) => {
     }
 });
 
+
 app.post('/Login', async (req, res) => {
     const { email, password } = req.body;
     try {
@@ -77,21 +78,26 @@ async function getProductDataAmazon(link) {
         // Array to store the product data
         const data = [];
 
+        const asins = await page.evaluate(() => {
+            // Select all product containers
+            const products = document.querySelectorAll('[data-asin]');
+            return Array.from(products)
+              .map(product => product.getAttribute('data-asin'))
+              .filter(asin => asin); // Filter out empty ASINs
+          });
         // Select all elements with "role=listitem"
         const productElements = await page.$$('[role="listitem"]');
-
         // Loop through the first 7 product elements
         for (let i = 0; i < Math.min(15, productElements.length); i++) {
             const product = productElements[i];
-
             // Extract product details
             const image = await product.$eval('img', img => img.src).catch(() => null);
             const name =  await product.$eval('h2 span', span => span.innerText).catch(() => null);
             // const description = await product.$eval('a h2 span', span => span.innerText).catch(() => null);
             const price = await product.$eval('.a-price-whole', span => span.innerText).catch(() => null);
-
+            const productId = asins[i];
             // Push the product data to the array
-            data.push({ image, name, price });
+            data.push({ image, name, price ,productId});
         }
 
         return data; // Return the scraped data
@@ -126,7 +132,7 @@ async function getProductDataFlipkart(link) {
         const productElements = await page.$$('._75nlfW');
 
         // Loop through the first 7 product elements
-        for (let i = 0; i < Math.min(9, productElements.length); i++) {
+        for (let i = 0; i < Math.min(15, productElements.length); i++) {
             const product = productElements[i];
 
             // Extract product details
@@ -135,7 +141,7 @@ async function getProductDataFlipkart(link) {
             const price = await product.$eval('.Nx9bqj', el => el.innerText).catch(() => null);
 
             // Push the product data to the array
-            data.push({ image, name, price });
+            data.push({ image, name, price});
         }
 
         return data; // Return the scraped data
