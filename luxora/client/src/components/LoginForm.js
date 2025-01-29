@@ -37,9 +37,10 @@ const LoginForm = ({isLoggedin, setLogin}) => {
         })
     }
   return (
-    <div className='flex flex-col items-center m-20' >
-        <div className='flex flex-col items-center justify-between bg-white w-1/3 h-auto mt-5 rounded-xl shadow-lg'>
-        <form onSubmit={submitHandler} className='w-3/4 py-20 flex flex-col'>
+    <div className='flex flex-col items-center min-h-screen p-6' >
+        <div className='flex flex-col items-center bg-white w-full sm:w-3/4 md:w-1/2 lg:w-1/3 max-w-lg mt-10 rounded-xl shadow-lg p-8'>
+        <h2 className="text-2xl font-bold mb-6">Login</h2>
+        <form onSubmit={submitHandler} className='w-full flex flex-col'>
 
             <label>
                 <p className="after:content-['*'] after:ml-0.5 after:text-red-500 block text-sm font-medium text-slate-700 py-2">Email Address</p>

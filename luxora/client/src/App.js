@@ -20,7 +20,7 @@ export default function App() {
 
   return (
 
-    <div className='h-screen w-full px-20 py-6'>
+    <div className='min-h-screen w-full px-4 sm:px-8 md:px-12 lg:px-20 py-4 sm:py-6 flex flex-col'>
       <NavBar setLogin={setLogin} isLoggedin={isLoggedin} />
       <Routes>
         <Route path='/' element={<Landing/>}/>
@@ -33,8 +33,6 @@ export default function App() {
         <Route path="/ProductsGrid" element={<ProductsGrid/>}/>
         <Route  element={<PageNotFound/>}/>
       </Routes>
-
-      
     </div>
   )
 }
