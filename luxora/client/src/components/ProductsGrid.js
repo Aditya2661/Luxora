@@ -32,7 +32,8 @@ export default function ProductGrid({ products }) {
                     name: item.name,
                     price: item.price,
                     image: item.image,
-                    platform: platform.name
+                    platform: platform.name,
+                    id : item.productId
                   }
 
                   let cart = localStorage.getItem("cart");
